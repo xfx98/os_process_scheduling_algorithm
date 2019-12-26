@@ -1,6 +1,9 @@
 package me.xfx98.show;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 import me.xfx98.main.BreakPoint;
 import me.xfx98.main.Process;
@@ -35,16 +38,18 @@ public class HRRN extends AbstractShow {
 				bps.add(bp);
 			}
 			for (int j = cont; j < al.size() && al.get(j).getBeginTime() <= bps.size(); j++) {
-				for (int i = 0; i <= qex.size(); i++) {
-					if (i == qex.size() || (al.get(cont).getServiceTime() + bps.size() - al.get(cont).getBeginTime())
-							* qex.get(i).getServiceTime() > (qex.get(i).getServiceTime() + bps.size()
-									- qex.get(i).getBeginTime()) * al.get(cont).getServiceTime()) {
-						qex.add(i, al.get(cont));
-						cont++;
-						break;
-					}
-				}
+				qex.add(al.get(cont));
+				cont++;
 			}
+			Collections.sort(qex, new Comparator<Process>() {
+				@Override
+				public int compare(Process o1, Process o2) {
+
+					return ((o1.getServiceTime() + bps.size() - o1.getBeginTime()) * 1.0 / o1.getServiceTime()
+							- (o2.getServiceTime() + bps.size() - o2.getBeginTime()) * 1.0
+									/ o2.getServiceTime()) > 0 ? -1 : 1;
+				}
+			});
 			Process p = qex.get(0);
 			qex.remove(0);
 			for (int t = 0; t < p.getServiceTime(); t++) {
@@ -62,14 +67,18 @@ public class HRRN extends AbstractShow {
 				bp.now = p;
 				bps.add(bp);
 				for (int j = cont; j < al.size() && al.get(j).getBeginTime() <= bps.size(); j++) {
-					for (int i = 0; i <= qex.size(); i++) {
-						if (i == qex.size() || al.get(cont).getServiceTime() < qex.get(i).getServiceTime()) {
-							qex.add(i, al.get(cont));
-							cont++;
-							break;
-						}
-					}
+					qex.add(al.get(cont));
+					cont++;
 				}
+				Collections.sort(qex, new Comparator<Process>() {
+					@Override
+					public int compare(Process o1, Process o2) {
+
+						return ((o1.getServiceTime() + bps.size() - o1.getBeginTime()) * 1.0 / o1.getServiceTime()
+								- (o2.getServiceTime() + bps.size() - o2.getBeginTime()) * 1.0
+										/ o2.getServiceTime()) > 0 ? -1 : 1;
+					}
+				});
 			}
 			qexd.add(p);
 		}
