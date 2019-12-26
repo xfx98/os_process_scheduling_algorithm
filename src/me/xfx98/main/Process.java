@@ -1,10 +1,10 @@
 package me.xfx98.main;
 
 public class Process implements Comparable<Process> {
-	private int beginTime;
-	private int serviceTime;
-	private String text;
-	public int usedTime;
+	private int beginTime; //进程开始时间
+	private int serviceTime; //进程服务时间
+	private String text; 
+	public int usedTime; //进程已运行时间
 
 	public Process() {
 	}
